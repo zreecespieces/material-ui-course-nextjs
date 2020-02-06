@@ -1,0 +1,29 @@
+{
+  "name": "nextjs",
+  "version": "4.0.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.8.0",
+    "@material-ui/icons": "^4.5.1",
+    "@material-ui/styles": "^4.7.1",
+    "axios": "^0.19.0",
+    "clsx": "latest",
+    "fs-extra": "^8.1.0",
+    "imagemin-mozjpeg": "^8.0.0",
+    "imagemin-optipng": "^7.1.0",
+    "next": "latest",
+    "next-compose-plugins": "^2.2.0",
+    "next-optimized-images": "^2.5.4",
+    "prop-types": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-ga": "^2.7.0",
+    "react-lottie": "^1.2.3"
+  },
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "postbuild": "node scripts/sitemap.js"
+  }
+}
