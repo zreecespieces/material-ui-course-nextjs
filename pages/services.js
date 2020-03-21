@@ -27,6 +27,9 @@ const useStyles = makeStyles(theme => ({
     marginTop: "10em",
     [theme.breakpoints.down("sm")]: {
       padding: 25
+    },
+    [theme.breakpoints.down("xs")]: {
+      padding: 5
     }
   },
   learnButton: {
