@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import ReactGA from "react-ga";
 import Head from "next/head";
 import axios from "axios";
@@ -310,6 +310,9 @@ export default function Estimate() {
   const theme = useTheme();
   const matchesMD = useMediaQuery(theme.breakpoints.down("md"));
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchesXS = useMediaQuery(theme.breakpoints.down("xs"));
+
+  const myRef = useRef(null);
 
   const [questions, setQuestions] = useState(defaultQuestions);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -351,6 +354,9 @@ export default function Estimate() {
   };
 
   const nextQuestion = () => {
+    if (matchesXS) {
+      window.scrollTo(0, myRef.current.offsetTop + 75);
+    }
     const newQuestions = cloneDeep(questions);
     const currentlyActive = newQuestions.filter(question => question.active);
     const activeIndex = currentlyActive[0].id - 1;
@@ -363,6 +369,9 @@ export default function Estimate() {
   };
 
   const previousQuestion = () => {
+    if (matchesXS) {
+      window.scrollTo(0, myRef.current.offsetTop + 75);
+    }
     const newQuestions = cloneDeep(questions);
     const currentlyActive = newQuestions.filter(question => question.active);
     const activeIndex = currentlyActive[0].id - 1;
@@ -418,6 +427,9 @@ export default function Estimate() {
 
     switch (newSelected.title) {
       case "Custom Software Development":
+        if (matchesXS) {
+          window.scrollTo(0, myRef.current.offsetTop + 75);
+        }
         setQuestions(softwareQuestions);
         setService(newSelected.title);
         setPlatforms([]);
@@ -427,6 +439,9 @@ export default function Estimate() {
         setUsers("");
         break;
       case "iOS/Android App Development":
+        if (matchesXS) {
+          window.scrollTo(0, myRef.current.offsetTop + 75);
+        }
         setQuestions(softwareQuestions);
         setService(newSelected.title);
         setPlatforms([]);
@@ -436,6 +451,9 @@ export default function Estimate() {
         setUsers("");
         break;
       case "Website Development":
+        if (matchesXS) {
+          window.scrollTo(0, myRef.current.offsetTop + 75);
+        }
         setQuestions(websiteQuestions);
         setService(newSelected.title);
         setPlatforms([]);
@@ -816,7 +834,7 @@ export default function Estimate() {
           .filter(question => question.active)
           .map((question, index) => (
             <React.Fragment key={index}>
-              <Grid item>
+              <Grid item ref={myRef}>
                 <Typography
                   variant="h1"
                   align="center"
