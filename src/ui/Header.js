@@ -19,6 +19,11 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Hidden from "@material-ui/core/Hidden";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import Grow from "@material-ui/core/Grow";
+import Paper from "@material-ui/core/Paper";
+import Popper from "@material-ui/core/Popper";
+import MenuList from "@material-ui/core/MenuList";
 
 function ElevationScroll(props) {
   const { children } = props;
@@ -81,7 +86,8 @@ const useStyles = makeStyles(theme => ({
   menu: {
     backgroundColor: theme.palette.common.blue,
     color: "white",
-    borderRadius: "0px"
+    borderRadius: "0px",
+    zIndex: 1302
   },
   menuItem: {
     ...theme.typography.tab,
@@ -153,25 +159,31 @@ export default function Header(props) {
     setOpenMenu(false);
   };
 
+  function handleListKeyDown(event) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      setOpen(false);
+    }
+  }
+
   const menuOptions = [
-    { name: "Services", link: "/services", activeIndex: 1, selectedIndex: 0 },
     {
       name: "Custom Software Development",
       link: "/customsoftware",
       activeIndex: 1,
-      selectedIndex: 1
+      selectedIndex: 0
     },
     {
       name: "iOS/Android App Development",
       link: "/mobileapps",
       activeIndex: 1,
-      selectedIndex: 2
+      selectedIndex: 1
     },
     {
       name: "Website Development",
       link: "/websites",
       activeIndex: 1,
-      selectedIndex: 3
+      selectedIndex: 2
     }
   ];
 
@@ -239,6 +251,7 @@ export default function Header(props) {
             aria-owns={route.ariaOwns}
             aria-haspopup={route.ariaPopup}
             onMouseOver={route.mouseOver}
+            onMouseLeave={() => setOpenMenu(false)}
           />
         ))}
       </Tabs>
@@ -258,8 +271,60 @@ export default function Header(props) {
       >
         Free Estimate
       </Button>
-      <Menu
+      <Popper
+        open={openMenu}
+        anchorEl={anchorEl}
+        placement="bottom-start"
+        role={undefined}
+        transition
+        disablePortal
+      >
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin: "top left"
+            }}
+          >
+            <Paper classes={{ root: classes.menu }} elevation={0}>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList
+                  onMouseOver={() => setOpenMenu(true)}
+                  onMouseLeave={handleClose}
+                  disablePadding
+                  autoFocusItem={false}
+                  id="simple-menu"
+                  onKeyDown={handleListKeyDown}
+                >
+                  {menuOptions.map((option, i) => (
+                    <MenuItem
+                      key={`${option}${i}`}
+                      component={Link}
+                      href={option.link}
+                      classes={{ root: classes.menuItem }}
+                      onClick={event => {
+                        handleMenuItemClick(event, i);
+                        props.setValue(1);
+                        handleClose();
+                      }}
+                      selected={
+                        i === props.selectedIndex &&
+                        props.value === 1 &&
+                        window.location.pathname !== "/services"
+                      }
+                    >
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
+      {/* <Menu
         id="simple-menu"
+        disableAutoFocusItem
         anchorEl={anchorEl}
         open={openMenu}
         onClose={handleClose}
@@ -270,24 +335,7 @@ export default function Header(props) {
         elevation={0}
         style={{ zIndex: 1302 }}
         keepMounted
-      >
-        {menuOptions.map((option, i) => (
-          <MenuItem
-            key={`${option}${i}`}
-            component={Link}
-            href={option.link}
-            classes={{ root: classes.menuItem }}
-            onClick={event => {
-              handleMenuItemClick(event, i);
-              props.setValue(1);
-              handleClose();
-            }}
-            selected={i === props.selectedIndex && props.value === 1}
-          >
-            {option.name}
-          </MenuItem>
-        ))}
-      </Menu>
+      ></Menu> */}
     </React.Fragment>
   );
 
