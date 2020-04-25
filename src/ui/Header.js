@@ -24,6 +24,11 @@ import Grow from "@material-ui/core/Grow";
 import Paper from "@material-ui/core/Paper";
 import Popper from "@material-ui/core/Popper";
 import MenuList from "@material-ui/core/MenuList";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import Grid from "@material-ui/core/Grid";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 function ElevationScroll(props) {
   const { children } = props;
@@ -124,11 +129,34 @@ const useStyles = makeStyles(theme => ({
   },
   appbar: {
     zIndex: theme.zIndex.modal + 1
+  },
+  expansion: {
+    backgroundColor: theme.palette.common.blue,
+    borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+    "&.Mui-expanded": {
+      margin: 0,
+      borderBottom: 0
+    },
+    "&::before": {
+      backgroundColor: "rgba(0, 0, 0, 0)"
+    }
+  },
+  expansionDetails: {
+    padding: 0,
+    backgroundColor: theme.palette.primary.light
+  },
+  expansionSummary: {
+    padding: "0 24px 0 16px",
+    "&:hover": {
+      backgroundColor: "rgba(0, 0, 0, 0.08)"
+    },
+    backgroundColor: props =>
+      props.value === 1 ? "rgba(0, 0, 0, 0.14)" : "inherit"
   }
 }));
 
 export default function Header(props) {
-  const classes = useStyles();
+  const classes = useStyles(props);
   const theme = useTheme();
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
   const matches = useMediaQuery(theme.breakpoints.down("md"));
@@ -351,25 +379,93 @@ export default function Header(props) {
       >
         <div className={classes.toolbarMargin} />
         <List disablePadding>
-          {routes.map(route => (
-            <ListItem
-              divider
-              key={`${route}${route.activeIndex}`}
-              button
-              component={Link}
-              href={route.link}
-              selected={props.value === route.activeIndex}
-              classes={{ selected: classes.drawerItemSelected }}
-              onClick={() => {
-                setOpenDrawer(false);
-                props.setValue(route.activeIndex);
-              }}
-            >
-              <ListItemText className={classes.drawerItem} disableTypography>
-                {route.name}
-              </ListItemText>
-            </ListItem>
-          ))}
+          {routes.map(route =>
+            route.name === "Services" ? (
+              <ExpansionPanel
+                elevation={0}
+                key={route.name}
+                classes={{ root: classes.expansion }}
+              >
+                <ExpansionPanelSummary
+                  classes={{ root: classes.expansionSummary }}
+                  expandIcon={<ExpandMoreIcon color="secondary" />}
+                >
+                  <ListItemText
+                    className={classes.drawerItem}
+                    disableTypography
+                    style={{ opacity: props.value === 1 ? 1 : null }}
+                    onClick={() => {
+                      setOpenDrawer(false);
+                      props.setValue(route.activeIndex);
+                    }}
+                  >
+                    <Link href={route.link} color="inherit">
+                      {route.name}
+                    </Link>
+                  </ListItemText>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails
+                  classes={{ root: classes.expansionDetails }}
+                >
+                  <Grid container direction="column">
+                    {menuOptions.map(route => (
+                      <Grid item>
+                        <ListItem
+                          divider
+                          key={`${route}${route.seleselectedIndex}`}
+                          button
+                          component={Link}
+                          href={route.link}
+                          selected={
+                            props.selectedIndex === route.selectedIndex &&
+                            props.value === 1 &&
+                            window.location.pathname !== "/services"
+                          }
+                          classes={{ selected: classes.drawerItemSelected }}
+                          onClick={() => {
+                            setOpenDrawer(false);
+                            props.setSelectedIndex(route.selectedIndex);
+                          }}
+                        >
+                          <ListItemText
+                            className={classes.drawerItem}
+                            disableTypography
+                          >
+                            {route.name
+                              .split(" ")
+                              .filter(word => word !== "Development")
+                              .join(" ")}
+                            <br />
+                            <span style={{ fontSize: "0.75rem" }}>
+                              Development
+                            </span>
+                          </ListItemText>
+                        </ListItem>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            ) : (
+              <ListItem
+                divider
+                key={`${route}${route.activeIndex}`}
+                button
+                component={Link}
+                href={route.link}
+                selected={props.value === route.activeIndex}
+                classes={{ selected: classes.drawerItemSelected }}
+                onClick={() => {
+                  setOpenDrawer(false);
+                  props.setValue(route.activeIndex);
+                }}
+              >
+                <ListItemText className={classes.drawerItem} disableTypography>
+                  {route.name}
+                </ListItemText>
+              </ListItem>
+            )
+          )}
           <ListItem
             onClick={() => {
               setOpenDrawer(false);
