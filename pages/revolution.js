@@ -10,6 +10,8 @@ import technologyAnimation from "../src/animations/technologyAnimation/data.json
 
 import CallToAction from "../src/ui/CallToAction";
 
+import { LazyLoadImage } from "react-lazy-load-image-component";
+
 const useStyles = makeStyles(theme => ({
   rowContainer: {
     paddingLeft: "5em",
@@ -415,7 +417,8 @@ export default function Revolution(props) {
             </Grid>
           </Grid>
           <Grid item lg style={{ alignSelf: "center" }}>
-            <img
+            <LazyLoadImage
+              threshold={400}
               src={section.icon}
               alt={section.iconAlt}
               width="100%"

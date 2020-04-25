@@ -22,10 +22,6 @@ export default class MyDocument extends Document {
           <meta property="og:image:width" content="1200" />
           <meta property="og:image:height" content="630" />
           <meta property="og:image:alt" content="company logo" />
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Pacifico|Raleway:100,400,400i,700|Roboto:300,400,500,700&display=swap"
-          />
         </Head>
         <body style={{ margin: 0 }}>
           <Main />

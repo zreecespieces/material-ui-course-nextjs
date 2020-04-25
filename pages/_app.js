@@ -6,6 +6,9 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import Theme from "../src/ui/Theme";
 import Header from "../src/ui/Header";
 import Footer from "../src/ui/Footer";
+import Fonts from "../src/ui/Fonts";
+
+import { LazyLoadComponent } from "react-lazy-load-image-component";
 
 ReactGA.initialize("UA-154916062-1");
 
@@ -25,6 +28,7 @@ export default class MyApp extends App {
   };
 
   componentDidMount() {
+    Fonts();
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector("#jss-server-side");
     if (jssStyles) {
@@ -52,10 +56,12 @@ export default class MyApp extends App {
             setSelectedIndex={this.setSelectedIndex}
             setValue={this.setValue}
           />
-          <Footer
-            setSelectedIndex={this.setSelectedIndex}
-            setValue={this.setValue}
-          />
+          <LazyLoadComponent threshold={400}>
+            <Footer
+              setSelectedIndex={this.setSelectedIndex}
+              setValue={this.setValue}
+            />
+          </LazyLoadComponent>
         </ThemeProvider>
       </React.Fragment>
     );
